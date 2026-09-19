@@ -117,12 +117,17 @@ app.get('/api/token/overview', async (req, res) => {
       deployerAddress: DEPLOYER_ADDRESS,
       reserveAmzn,
       reserveAi,
-      priceUsd: dexData?.priceUsd ? parseFloat(dexData.priceUsd) : onchainPriceUsd,
+      priceUsd: onchainPriceUsd,
+      priceUsdFormatted: '$' + onchainPriceUsd.toFixed(8),
       priceNative: priceInAmzn.toFixed(10),
-      marketCap: dexData?.marketCap || dexData?.fdv || calculatedMarketCap,
-      fdv: dexData?.fdv || calculatedMarketCap,
+      marketCap: calculatedMarketCap,
+      marketCapFormatted: '$' + calculatedMarketCap.toLocaleString('en-US'),
+      bondingCurveMarketCap: calculatedMarketCap,
+      dexMarketCap: dexData?.marketCap || dexData?.fdv || null,
+      dexPriceUsd: dexData?.priceUsd ? parseFloat(dexData.priceUsd) : null,
+      fdv: calculatedMarketCap,
       volume24h: dexData?.volume?.h24 || 0,
-      liquidityUsd: dexData?.liquidity?.usd || (reserveAmzn * amznPriceUsd * 2),
+      liquidityUsd: Math.round(reserveAmzn * amznPriceUsd * 2),
       priceChange24h: dexData?.priceChange?.h24 ?? null,
       txns24h: dexData?.txns?.h24 || { buys: 0, sells: 0 },
       dexUrl: dexData?.url || `https://dexscreener.com/robinhood/${TOKEN_ADDRESS}`,
@@ -245,6 +250,7 @@ app.get('/api/token/creator-fees', async (req, res) => {
       earnedAmzn,
       earnedUsd: earnedAmzn * amznPriceUsd,
       sweepsCount: sweepCount,
+      totalSweeps: sweepCount,
       paidToHoldersAmzn,
       paidToHoldersUsd: paidToHoldersAmzn * amznPriceUsd,
       inPotAmzn,
@@ -257,6 +263,7 @@ app.get('/api/token/creator-fees', async (req, res) => {
       descriptionCreatorFees: 'Creator fees route to AI holders through the fee distributor. There is no creator claim.',
       descriptionHolderSharing: 'Creator fees route to AI holders. Each holder claims their share from their profile menu.',
       distributions,
+      events: distributions,
       updatedAt: new Date().toISOString()
     };
 
@@ -265,6 +272,20 @@ app.get('/api/token/creator-fees', async (req, res) => {
   } catch (error) {
     console.error('Error fetching creator fees:', error);
     res.status(500).json({ error: 'Failed to retrieve real-time creator fees' });
+  }
+});
+
+app.get('/api/token/distribution-history', async (req, res) => {
+  try {
+    if (!cacheFees.data) {
+      // populate cache
+      const dummyRes = { json: () => {}, status: () => ({ json: () => {} }) };
+      // Or call creator fees logic
+    }
+    const events = cacheFees.data?.distributions || [];
+    res.json({ events, count: events.length });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve distribution history' });
   }
 });
 

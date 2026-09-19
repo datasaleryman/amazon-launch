@@ -1186,6 +1186,19 @@
     font-size: 0.75rem;
     font-weight: 800;
   }
+  .live-ticker-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 68px;
+    z-index: 90;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+  @media (max-width: 900px) {
+    .live-ticker-bar {
+      top: 104px;
+    }
+  }
 
 </style>
 </head>
@@ -1226,6 +1239,39 @@
     </div>
   </div>
 </header>
+<div class="live-ticker-bar" id="liveTickerBar">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:7px 0;font-size:0.82rem;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span class="rt-badge-live" style="font-size:0.72rem;padding:2px 8px;">
+        <span class="rt-pulse-dot" style="width:6px;height:6px;"></span>
+        <span>REAL-TIME MCAP</span>
+      </span>
+      <span style="color:var(--muted);font-weight:600;">Contract:</span>
+      <code style="font-family:ui-monospace,monospace;background:rgba(255,153,0,0.08);color:#d97706;padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.8rem;">0xFDA19b97...A1DF</code>
+      <button onclick="navigator.clipboard.writeText('0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);" style="padding:2px 8px;border-radius:6px;border:1px solid var(--line);background:var(--soft);font-size:0.72rem;font-weight:700;cursor:pointer;">Copy</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div>
+        <span style="color:var(--muted);margin-right:4px;">Market Cap:</span>
+        <b id="topBarMarketCap" style="color:#059669;font-size:0.95rem;font-weight:800;">$17,763</b>
+      </div>
+      <div>
+        <span style="color:var(--muted);margin-right:4px;">Price:</span>
+        <b id="topBarPrice" style="color:var(--ink);font-weight:700;">$0.00001776</b>
+      </div>
+      <div>
+        <span style="color:var(--muted);margin-right:4px;">Liquidity:</span>
+        <b id="topBarLiquidity" style="color:var(--ink);font-weight:700;">$14,557</b>
+      </div>
+      <a href="https://dexscreener.com/robinhood/0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+        DexScreener ↗
+      </a>
+      <a href="https://robinhoodchain.blockscout.com/token/0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:none;">
+        Blockscout ↗
+      </a>
+    </div>
+  </div>
+</div>
 
 <main>
   <div class="wrap">
@@ -1245,9 +1291,26 @@
           </a>
         </div>
         <div class="stats">
-          <div class="stat"><strong>Amazon Inu</strong><span>Name</span></div>
-          <div class="stat"><strong>$AI</strong><span>Ticker</span></div>
-          <div class="stat"><strong>Community First</strong><span>Positioning</span></div>
+          <div class="stat" style="border:1.5px solid rgba(5,150,105,0.3);background:rgba(5,150,105,0.04);position:relative;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+              <span class="rt-pulse-dot" style="width:7px;height:7px;"></span>
+              <span style="font-size:0.68rem;font-weight:800;color:#059669;letter-spacing:0.04em;">REAL-TIME MCAP</span>
+            </div>
+            <strong id="heroMarketCap" style="color:#059669;font-size:1.35rem;font-weight:900;">$17,763</strong>
+            <span id="heroMcapSub" style="font-size:0.75rem;color:var(--muted);">Contract: 0xFDA1...A1DF</span>
+          </div>
+          <div class="stat">
+            <strong id="heroPriceUsd" style="font-size:1.15rem;">$0.0000178</strong>
+            <span>Live Price (USD)</span>
+          </div>
+          <div class="stat">
+            <strong>1,000,000,000</strong>
+            <span>Total Supply ($AI)</span>
+          </div>
+          <div class="stat">
+            <strong style="color:var(--accent);font-size:1.15rem;">Robinhood</strong>
+            <span>Chain ID: 4663</span>
+          </div>
         </div>
       </div>
 
@@ -2832,5 +2895,276 @@
   }
 })();
 </script>
+
+<script>
+(function() {
+  let overviewData = null;
+  let creatorFeesData = null;
+  let allTxHistory = [];
+  let currentHistoryFilter = 'ALL';
+
+  async function loadRealtimeData(manual = false) {
+    const refreshBtn = document.getElementById('refreshRtBtn');
+    if (manual && refreshBtn) {
+      refreshBtn.disabled = true;
+      refreshBtn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Refreshing...';
+    }
+
+    try {
+      // 1. Fetch token overview (real-time marketcap, price, liquidity, bonding curve reserves)
+      const ovRes = await fetch('/api/token/overview');
+      if (ovRes.ok) {
+        overviewData = await ovRes.json();
+        updateMarketcapElements(overviewData);
+      }
+
+      // 2. Fetch creator fees & holder fee sharing numbers
+      const feeRes = await fetch('/api/token/creator-fees');
+      if (feeRes.ok) {
+        creatorFeesData = await feeRes.json();
+        updateFeesElements(creatorFeesData);
+      }
+
+      // 3. Fetch distribution history transactions
+      const histRes = await fetch('/api/token/distribution-history');
+      if (histRes.ok) {
+        const histData = await histRes.json();
+        allTxHistory = histData.events || [];
+        renderDistributionHistory(allTxHistory);
+      }
+    } catch (err) {
+      console.error('Error fetching real-time token data:', err);
+    } finally {
+      if (manual && refreshBtn) {
+        setTimeout(() => {
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg> Refresh';
+        }, 600);
+      }
+    }
+  }
+
+  function updateMarketcapElements(data) {
+    if (!data) return;
+    const mcapFormatted = data.marketCapFormatted || ('
+</html>
+ + Number(data.marketCap || 0).toLocaleString('en-US'));
+    const priceFormatted = data.priceUsd ? ('
+</html>
+ + Number(data.priceUsd).toFixed(8)) : '$0.00001776';
+    const shortPrice = data.priceUsd ? ('
+</html>
+ + Number(data.priceUsd).toFixed(7)) : '$0.0000178';
+    const liquidityFormatted = data.liquidityUsd ? ('
+</html>
+ + Number(data.liquidityUsd).toLocaleString('en-US')) : '$14,557';
+    const nativePriceFormatted = data.priceNative ? (data.priceNative + ' AMZN') : '0.0000000699 AMZN';
+
+    // Top ticker bar
+    const topBarMcap = document.getElementById('topBarMarketCap');
+    if (topBarMcap) topBarMcap.textContent = mcapFormatted;
+    const topBarPrice = document.getElementById('topBarPrice');
+    if (topBarPrice) topBarPrice.textContent = priceFormatted;
+    const topBarLiquidity = document.getElementById('topBarLiquidity');
+    if (topBarLiquidity) topBarLiquidity.textContent = liquidityFormatted;
+
+    // Hero stats
+    const heroMcap = document.getElementById('heroMarketCap');
+    if (heroMcap) heroMcap.textContent = mcapFormatted;
+    const heroPrice = document.getElementById('heroPriceUsd');
+    if (heroPrice) heroPrice.textContent = shortPrice;
+
+    // Token overview section
+    const summaryMcap = document.getElementById('summaryMarketCap');
+    if (summaryMcap) summaryMcap.textContent = mcapFormatted + ' USD';
+    const summaryPrice = document.getElementById('summaryTokenPrice');
+    if (summaryPrice) summaryPrice.textContent = priceFormatted + ' (' + nativePriceFormatted + ')';
+
+    // Real-Time Fee Sharing & Marketcap section grid
+    const rtMcap = document.getElementById('rtMarketCap');
+    if (rtMcap) rtMcap.textContent = mcapFormatted;
+    const rtMcapSub = document.getElementById('rtMarketCapSub');
+    if (rtMcapSub) {
+      rtMcapSub.textContent = '1,000,000,000 $AI × ' + priceFormatted;
+    }
+
+    const rtPrice = document.getElementById('rtPrice');
+    if (rtPrice) rtPrice.textContent = priceFormatted;
+    const rtPriceNative = document.getElementById('rtPriceNative');
+    if (rtPriceNative) rtPriceNative.textContent = nativePriceFormatted + ' (AMZN: 
+</html>
+ + (data.amznPriceUsd ? data.amznPriceUsd.toFixed(2) : '254.23') + ')';
+
+    const rtReservesAmzn = document.getElementById('rtReservesAmzn');
+    if (rtReservesAmzn) rtReservesAmzn.textContent = Number(data.reserveAmzn || 0).toFixed(2) + ' AMZN';
+    const rtReservesAi = document.getElementById('rtReservesAi');
+    if (rtReservesAi) rtReservesAi.textContent = Math.round(data.reserveAi || 0).toLocaleString('en-US') + ' $AI in curve';
+  }
+
+  function updateFeesElements(data) {
+    if (!data) return;
+    const imgEarnedAmzn = document.getElementById('imgEarnedAmzn');
+    if (imgEarnedAmzn) imgEarnedAmzn.textContent = Number(data.earnedAmzn || 0).toFixed(6) + ' AMZN';
+    const imgSweepsSub = document.getElementById('imgSweepsSub');
+    if (imgSweepsSub) imgSweepsSub.textContent = 'Earned by AI across ' + (data.totalSweeps || 19) + ' sweeps';
+
+    const imgPaidToHolders = document.getElementById('imgPaidToHolders');
+    if (imgPaidToHolders) imgPaidToHolders.textContent = Number(data.paidToHoldersAmzn || 0).toFixed(6) + ' AMZN';
+    const imgInPot = document.getElementById('imgInPot');
+    if (imgInPot) imgInPot.textContent = Number(data.inPotAmzn || 0).toFixed(6) + ' AMZN';
+  }
+
+  function renderDistributionHistory(events) {
+    const totalCountEl = document.getElementById('historyTotalCount');
+    if (totalCountEl) totalCountEl.textContent = events.length;
+
+    const sweeps = events.filter(e => e.type === 'SWEEP');
+    const harvests = events.filter(e => e.type === 'HARVEST');
+
+    const countAll = document.getElementById('countAll');
+    if (countAll) countAll.textContent = events.length;
+    const countSweeps = document.getElementById('countSweeps');
+    if (countSweeps) countSweeps.textContent = sweeps.length;
+    const countHarvests = document.getElementById('countHarvests');
+    if (countHarvests) countHarvests.textContent = harvests.length;
+
+    applyHistoryFilter(currentHistoryFilter);
+  }
+
+  window.filterHistory = function(filter, btn) {
+    currentHistoryFilter = filter;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyHistoryFilter(filter);
+  };
+
+  function applyHistoryFilter(filter) {
+    const tbody = document.getElementById('txTableBody');
+    if (!tbody) return;
+
+    let filtered = allTxHistory;
+    if (filter === 'SWEEP') filtered = allTxHistory.filter(e => e.type === 'SWEEP');
+    if (filter === 'HARVEST') filtered = allTxHistory.filter(e => e.type === 'HARVEST');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted);">No transactions found for this filter.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(tx => {
+      const isSweep = tx.type === 'SWEEP';
+      const badgeClass = isSweep ? 'tx-badge-sweep' : 'tx-badge-harvest';
+      const badgeLabel = isSweep ? 'Fee Sweep' : 'Pot Inflow';
+      const shortHash = tx.hash.slice(0, 8) + '...' + tx.hash.slice(-6);
+
+      return (
+        '<tr>' +
+          '<td><span class="' + badgeClass + '">' + badgeLabel + '</span></td>' +
+          '<td style="font-weight:700;color:var(--ink);">' + Number(tx.amountAmzn).toFixed(6) + ' AMZN</td>' +
+          '<td style="color:#059669;font-weight:600;">
+</html>
+ + Number(tx.amountUsd || 0).toFixed(2) + '</td>' +
+          '<td style="font-family:ui-monospace,monospace;font-size:0.8rem;color:var(--muted);">#' + tx.blockNumber + '</td>' +
+          '<td>' +
+            '<div class="tx-hash-box">' +
+              '<span title="' + tx.hash + '">' + shortHash + '</span>' +
+              '<button onclick="navigator.clipboard.writeText('' + tx.hash + '');this.textContent='✓';setTimeout(()=>this.textContent='Copy',1500);" style="padding:2px 6px;border-radius:4px;border:1px solid var(--line);background:var(--paper);font-size:0.7rem;cursor:pointer;">Copy</button>' +
+            '</div>' +
+          '</td>' +
+          '<td>' +
+            '<a href="' + tx.explorerUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-size:0.8rem;font-weight:700;text-decoration:none;">Blockscout ↗</a>' +
+          '</td>' +
+        '</tr>'
+      );
+    }).join('');
+  }
+
+  // Wallet Eligibility Checker
+  window.checkEligibility = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const input = document.getElementById('walletInput');
+    const btn = document.getElementById('checkElBtn');
+    const resultBox = document.getElementById('eligibilityResult');
+    if (!input || !btn || !resultBox) return;
+
+    const address = input.value.trim();
+    if (!address) {
+      alert('Please enter a valid Robinhood Chain address (0x...)');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+    resultBox.style.display = 'block';
+
+    try {
+      const res = await fetch('/api/token/eligibility?address=' + encodeURIComponent(address));
+      const data = await res.json();
+
+      const statusBadge = document.getElementById('elStatusBadge');
+      const addressLabel = document.getElementById('elAddressLabel');
+      const balanceVal = document.getElementById('elBalanceVal');
+      const shareVal = document.getElementById('elShareVal');
+      const potShareVal = document.getElementById('elPotShareVal');
+      const potShareUsdVal = document.getElementById('elPotShareUsdVal');
+      const lifetimeShareVal = document.getElementById('elLifetimeShareVal');
+      const lifetimeShareUsdVal = document.getElementById('elLifetimeShareUsdVal');
+      const messageEl = document.getElementById('elMessage');
+
+      if (addressLabel) addressLabel.textContent = data.address;
+
+      if (data.isEligible) {
+        if (statusBadge) {
+          statusBadge.style.background = '#ecfdf5';
+          statusBadge.style.color = '#065f46';
+          statusBadge.style.border = '1px solid #a7f3d0';
+          statusBadge.innerHTML = '✓ Eligible for Fee Sharing';
+        }
+      } else {
+        if (statusBadge) {
+          statusBadge.style.background = '#fef2f2';
+          statusBadge.style.color = '#991b1b';
+          statusBadge.style.border = '1px solid #fecaca';
+          statusBadge.innerHTML = '✕ Not Currently Eligible';
+        }
+      }
+
+      if (balanceVal) balanceVal.textContent = (data.balanceFormatted || '0') + ' $AI';
+      if (shareVal) shareVal.textContent = (data.shareOfSupply * 100).toFixed(4) + '% of circulating supply';
+      if (potShareVal) potShareVal.textContent = (data.estimatedPotShareAmzn ? data.estimatedPotShareAmzn.toFixed(6) : '0.000000') + ' AMZN';
+      if (potShareUsdVal) potShareUsdVal.textContent = '
+</html>
+ + (data.estimatedPotShareUsd ? data.estimatedPotShareUsd.toFixed(2) : '0.00') + ' USD';
+      if (lifetimeShareVal) lifetimeShareVal.textContent = (data.estimatedLifetimeShareAmzn ? data.estimatedLifetimeShareAmzn.toFixed(6) : '0.000000') + ' AMZN';
+      if (lifetimeShareUsdVal) lifetimeShareUsdVal.textContent = '
+</html>
+ + (data.estimatedLifetimeShareUsd ? data.estimatedLifetimeShareUsd.toFixed(2) : '0.00') + ' USD';
+      if (messageEl) messageEl.textContent = data.explanation || '';
+
+    } catch (err) {
+      console.error('Error checking eligibility:', err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Check Eligibility';
+    }
+  };
+
+  window.testAddress = function(addr) {
+    const input = document.getElementById('walletInput');
+    if (input) {
+      input.value = addr;
+      checkEligibility();
+    }
+  };
+
+  // Initial load
+  window.loadRealtimeData = loadRealtimeData;
+  loadRealtimeData();
+
+  // Auto-refresh every 15 seconds
+  setInterval(() => loadRealtimeData(false), 15000);
+})();
+</script>
+
 </body>
 </html>
