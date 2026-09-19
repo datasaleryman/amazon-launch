@@ -1,6 +1,6 @@
 {
   "name": "Amazon Inu — AI",
-  "description": "The official portal for Amazon Inu ($AI) featuring an interactive arcade runner game, meme generator, and community showcase.",
+  "description": "The official portal for Amazon Inu ($AI) featuring real-time marketcap, on-chain creator fees, holder fee sharing eligibility, and distribution history on Robinhood Chain.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

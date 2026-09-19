@@ -547,6 +547,646 @@
     }
   }
 
+  /* Real-time Token & Fee Sharing Styles */
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: live-pulse 2s infinite;
+  }
+  @keyframes live-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .contract-box {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .contract-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .contract-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    word-break: break-all;
+  }
+  .copy-btn {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+  }
+  .copy-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .market-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .market-stat-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .market-stat-card .m-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .market-stat-card .m-value {
+    font-size: 1.65rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .market-stat-card .m-sub {
+    font-size: 0.82rem;
+    color: #059669;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  /* Image-matching Creator Fees Cards */
+  .creator-fees-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+  @media (max-width: 768px) {
+    .creator-fees-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .creator-fee-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cf-stat-val {
+    font-size: 2.35rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .cf-stat-usd {
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .cf-stat-desc {
+    font-size: 0.98rem;
+    color: var(--ink);
+    font-weight: 600;
+    margin-top: 14px;
+    line-height: 1.45;
+  }
+  .cf-stat-subtext {
+    font-size: 0.86rem;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+  .cf-pill-claimed {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 6px 12px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  /* Holder Fee Sharing Card (Matching Image) */
+  .holder-sharing-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 26px;
+    margin-top: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .hs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hs-header h3 {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 800;
+  }
+  .hs-toggle-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-weight: 800;
+    font-size: 0.82rem;
+  }
+  .hs-desc {
+    margin-top: 14px;
+    font-size: 0.98rem;
+    color: #374151;
+    line-height: 1.55;
+  }
+  .hs-notice {
+    margin-top: 10px;
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  /* Eligibility Checker */
+  .eligibility-container {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 26px;
+    margin-top: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .eligibility-input-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .el-input {
+    flex: 1;
+    min-width: 280px;
+    padding: 13px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    font-size: 0.92rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    outline: none;
+    background: var(--soft);
+  }
+  .el-input:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .el-btn {
+    padding: 13px 22px;
+    border-radius: 12px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .el-btn:hover {
+    background: var(--accent);
+    color: #111;
+  }
+  .el-btn-secondary {
+    padding: 13px 18px;
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.88rem;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .el-btn-secondary:hover {
+    background: #fff;
+    border-color: var(--ink);
+  }
+  .el-result-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 14px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    display: none;
+  }
+
+  /* History Table */
+  .history-container {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 26px;
+    margin-top: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .tab-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .tx-table-wrap {
+    overflow-x: auto;
+    margin-top: 18px;
+  }
+  .tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .tx-table th {
+    text-align: left;
+    padding: 12px 14px;
+    background: var(--soft);
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--line);
+  }
+  .tx-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  .tx-badge-sweep {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+  .tx-badge-claim {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+
+  /* Real-Time Market Overview & Fee Sharing Styles */
+  .rt-badge-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+  .rt-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: rtPulse 2s infinite;
+  }
+  @keyframes rtPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  .rt-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .rt-stat-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .rt-stat-card .s-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .rt-stat-card .s-val {
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .rt-stat-card .s-sub {
+    font-size: 0.84rem;
+    color: #059669;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  /* Exact Image Matching Cards for Creator Fees & Holder Fee Sharing */
+  .fee-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 28px;
+  }
+  .fee-outer-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+  }
+  .fee-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .fee-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #374151;
+    flex-shrink: 0;
+  }
+  .fee-card-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.01em;
+  }
+  .fee-inner-box {
+    background: #f1f3f5;
+    border-radius: 16px;
+    padding: 20px 26px;
+  }
+  .fee-inner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .fee-inner-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .fee-main-number {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .fee-sub-label {
+    margin-top: 6px;
+    font-size: 0.92rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  .fee-footer-text {
+    margin: 18px 0 0 0;
+    font-size: 0.98rem;
+    color: #374151;
+    line-height: 1.5;
+  }
+
+  /* Eligibility Checker Container */
+  .eligibility-container {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px;
+    margin-top: 28px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+  }
+  .eligibility-input-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  .el-input {
+    flex: 1;
+    min-width: 280px;
+    padding: 13px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    font-size: 0.92rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    outline: none;
+    background: var(--soft);
+  }
+  .el-input:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .el-btn {
+    padding: 13px 24px;
+    border-radius: 12px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.92rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .el-btn:hover {
+    background: var(--accent);
+    color: #111;
+  }
+  .el-result-box {
+    margin-top: 22px;
+    padding: 22px;
+    border-radius: 16px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    display: none;
+  }
+
+  /* History Table Container */
+  .history-container {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px;
+    margin-top: 28px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+  }
+  .tab-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .tx-table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+  .tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .tx-table th {
+    text-align: left;
+    padding: 12px 14px;
+    background: var(--soft);
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--line);
+  }
+  .tx-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  .tx-badge-sweep {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+  .tx-badge-harvest {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
 </style>
 </head>
 <body>
@@ -565,6 +1205,7 @@
         <a href="#story">Story</a>
         <a href="#scene">Visual</a>
         <a href="#token">Token</a>
+        <a href="#fee-sharing">Fee Sharing</a>
       </div>
       <div class="nav-actions">
         <a class="nav-twitter" href="https://x.com/amzninu" target="_blank" rel="noopener noreferrer" aria-label="Amazon Inu Twitter" title="Follow @amzninu on Twitter">
@@ -573,6 +1214,16 @@
         <a class="navbtn" href="#token">Explore $AI</a>
       </div>
     </nav>
+    <div class="mobile-nav-bar">
+      <a class="m-navlink" href="#about">About</a>
+      <a class="m-navlink" href="#utility">Utility</a>
+      <a class="m-navlink" href="#meme-generator">Meme</a>
+      <a class="m-navlink" href="#arcade">Arcade</a>
+      <a class="m-navlink" href="#story">Story</a>
+      <a class="m-navlink" href="#scene">Visual</a>
+      <a class="m-navlink" href="#token">Token</a>      <a class="m-navlink" href="#fee-sharing">Fees & Eligibility</a>
+      <a class="m-navlink" href="#fee-sharing">Fee Sharing</a>
+    </div>
   </div>
 </header>
 
@@ -831,7 +1482,12 @@
           <div class="token-row"><span>Name</span><b>Amazon Inu</b></div>
           <div class="token-row"><span>Ticker</span><b>$AI</b></div>
           <div class="token-row"><span>Category</span><b>Meme + AI Utility</b></div>
-          <div class="token-row"><span>Network</span><b>Coming Soon</b></div>
+          <div class="token-row"><span>Official Contract</span><b style="font-family:ui-monospace,monospace;font-size:0.85rem;word-break:break-all;"><a href="https://robinhoodchain.blockscout.com/token/0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF</a> <button onclick="navigator.clipboard.writeText('0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);" style="margin-left:6px;padding:2px 8px;font-size:0.75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);cursor:pointer;">Copy</button></b></div>
+<div class="token-row"><span>Network</span><b>Robinhood Chain (Mainnet)</b></div>
+<div class="token-row"><span>Real-Time Market Cap</span><b id="summaryMarketCap" style="color:#059669;">Loading...</b></div>
+<div class="token-row"><span>Live Token Price</span><b id="summaryTokenPrice">Loading...</b></div>
+<div class="token-row"><span>Bonding Curve</span><b style="font-family:ui-monospace,monospace;font-size:0.82rem;"><a href="https://robinhoodchain.blockscout.com/address/0x538f29720E8Be8639BaFD50Db5E75B465d4041C9" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">0x538f...41C9 ↗</a></b></div>
+<div class="token-row"><span>Holder Distributor</span><b style="font-family:ui-monospace,monospace;font-size:0.82rem;"><a href="https://robinhoodchain.blockscout.com/address/0x334f4099Dc09B0cfD93aB23907DD8AF9433cB327" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">0x334f...B327 ↗</a></b></div>
           <div class="token-row"><span>Official X</span><b><a href="https://x.com/amzninu" target="_blank" rel="noopener noreferrer" style="color:var(--accent);display:inline-flex;align-items:center;gap:4px;text-decoration:underline;">@amzninu ↗</a></b></div>
         </div>
         <div class="panel">
@@ -873,6 +1529,227 @@
       </div>
     </div>
   </section>
+
+  <!-- Real-Time Marketcap, Creator Fees, Holder Fee Sharing, Eligibility & History -->
+  <section id="fee-sharing" style="background:#fcfcfc;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:70px 0;">
+    <div class="wrap">
+      <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div class="kicker">Real-Time On-Chain Revenue Sharing</div>
+          <h2 style="margin-bottom:8px;">Creator Fees & Holder Fee Sharing</h2>
+          <p class="muted" style="max-width:700px;margin:0;">
+            100% verified on Robinhood Chain. Creator fees route directly to $AI holders through the on-chain fee distributor. Zero creator claim.
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="rt-badge-live">
+            <span class="rt-pulse-dot"></span>
+            <span>Real-Time Synced</span>
+          </div>
+          <button id="refreshRtBtn" onclick="loadRealtimeData(true)" style="padding:7px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-Time Marketcap & On-Chain Stats Grid -->
+      <div class="rt-stats-grid">
+        <div class="rt-stat-card">
+          <div class="s-head">
+            <span>Real-Time Market Cap</span>
+            <span style="font-size:1.1rem;">💎</span>
+          </div>
+          <div class="s-val" id="rtMarketCap">$0</div>
+          <div class="s-sub" id="rtMarketCapSub">Calculated from on-chain reserves</div>
+        </div>
+        <div class="rt-stat-card">
+          <div class="s-head">
+            <span>AI Token Price</span>
+            <span style="font-size:1.1rem;">📈</span>
+          </div>
+          <div class="s-val" id="rtPrice">$0.000000</div>
+          <div class="s-sub" id="rtPriceNative" style="color:var(--muted);">0.000000000 AMZN</div>
+        </div>
+        <div class="rt-stat-card">
+          <div class="s-head">
+            <span>Bonding Curve Reserves</span>
+            <span style="font-size:1.1rem;">⚖️</span>
+          </div>
+          <div class="s-val" id="rtReservesAmzn">0 AMZN</div>
+          <div class="s-sub" id="rtReservesAi" style="color:var(--muted);">0 $AI in curve</div>
+        </div>
+        <div class="rt-stat-card">
+          <div class="s-head">
+            <span>Official Contract</span>
+            <span style="font-size:1.1rem;">📄</span>
+          </div>
+          <div class="s-val" style="font-size:1.15rem;font-family:ui-monospace,monospace;word-break:break-all;line-height:1.35;">
+            <a href="https://robinhoodchain.blockscout.com/token/0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">0xFDA1...A1DF</a>
+          </div>
+          <div class="s-sub" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+            <button onclick="navigator.clipboard.writeText('0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);" style="padding:3px 10px;border-radius:6px;border:1px solid var(--line);background:var(--soft);font-size:0.75rem;font-weight:700;cursor:pointer;">Copy Contract</button>
+            <a href="https://dexscreener.com/robinhood/0xFDA19b9719e99B3BD73bC4245beDC8C8a484A1DF" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:var(--muted);text-decoration:underline;">DexScreener ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXACT VISUAL MATCH TO USER SCREENSHOT (Card 1: Creator fees, Card 2: Holder fee sharing) -->
+      <div class="fee-cards-container">
+        <!-- CARD 1: Creator fees -->
+        <div class="fee-outer-card" id="creatorFeesCard">
+          <div class="fee-card-header">
+            <div class="fee-icon-box" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+              </svg>
+            </div>
+            <h3 class="fee-card-title">Creator fees</h3>
+          </div>
+
+          <div class="fee-inner-box">
+            <div class="fee-main-number" id="imgEarnedAmzn">0.896698 AMZN</div>
+            <div class="fee-sub-label" id="imgSweepsSub">Earned by AI across 16 sweeps</div>
+          </div>
+
+          <p class="fee-footer-text">
+            Creator fees route to AI holders through the fee distributor. There is no creator claim.
+          </p>
+        </div>
+
+        <!-- CARD 2: Holder fee sharing -->
+        <div class="fee-outer-card" id="holderFeeSharingCard">
+          <div class="fee-card-header">
+            <div class="fee-icon-box" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="fee-card-title">Holder fee sharing</h3>
+          </div>
+
+          <div class="fee-inner-grid">
+            <div class="fee-inner-box">
+              <div class="fee-main-number" id="imgPaidToHolders">0 AMZN</div>
+              <div class="fee-sub-label">Paid to holders</div>
+            </div>
+            <div class="fee-inner-box">
+              <div class="fee-main-number" id="imgInPot">0.177848 AMZN</div>
+              <div class="fee-sub-label">In the pot for the next distribution</div>
+            </div>
+          </div>
+
+          <p class="fee-footer-text">
+            Creator fees route to AI holders. Each holder claims their share from their profile menu.
+          </p>
+        </div>
+      </div>
+
+      <!-- HOLDER FEE SHARING ELIGIBILITY CHECKER -->
+      <div class="eligibility-container" id="eligibilitySection">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="margin:0 0 6px 0;font-size:1.35rem;font-weight:800;">Holder Fee Sharing Eligibility</h3>
+            <p class="muted" style="margin:0;font-size:0.92rem;">
+              Check any Robinhood Chain wallet address to verify your $AI holdings and calculate your real-time share of the fee pot.
+            </p>
+          </div>
+          <span style="font-size:0.8rem;padding:4px 10px;border-radius:6px;background:var(--soft);color:var(--muted);font-weight:700;">
+            Contract: 0x334F...B327
+          </span>
+        </div>
+
+        <form id="eligibilityForm" onsubmit="checkEligibility(event)" class="eligibility-input-group">
+          <input type="text" id="walletInput" class="el-input" placeholder="Enter Robinhood Chain Address (0x...)" spellcheck="false" autocomplete="off" />
+          <button type="submit" class="el-btn" id="checkElBtn">Check Eligibility</button>
+        </form>
+
+        <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:0.8rem;color:var(--muted);font-weight:600;">Test sample addresses:</span>
+          <button type="button" onclick="testAddress('0x15d0135f160095d03e771dd2f863eb8ec681cb46')" style="padding:4px 10px;font-size:0.75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);cursor:pointer;">Sample Holder (13.6M $AI)</button>
+          <button type="button" onclick="testAddress('0x538f29720E8Be8639BaFD50Db5E75B465d4041C9')" style="padding:4px 10px;font-size:0.75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);cursor:pointer;">Curve (Excluded)</button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="eligibilityResult" class="el-result-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div id="elStatusBadge" style="padding:6px 14px;border-radius:999px;font-size:0.85rem;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
+              Checking...
+            </div>
+            <span id="elAddressLabel" style="font-family:ui-monospace,monospace;font-size:0.82rem;color:var(--muted);"></span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-top:14px;">
+            <div style="background:var(--paper);border:1px solid var(--line);padding:14px 16px;border-radius:12px;">
+              <div style="font-size:0.78rem;color:var(--muted);font-weight:700;">$AI Token Holdings</div>
+              <div id="elBalanceVal" style="font-size:1.35rem;font-weight:800;color:var(--ink);margin-top:4px;">0 $AI</div>
+              <div id="elShareVal" style="font-size:0.8rem;color:var(--muted);margin-top:2px;">0% of total supply</div>
+            </div>
+            <div style="background:var(--paper);border:1px solid var(--line);padding:14px 16px;border-radius:12px;">
+              <div style="font-size:0.78rem;color:var(--muted);font-weight:700;">Your Share of Current Pot</div>
+              <div id="elPotShareVal" style="font-size:1.35rem;font-weight:800;color:#059669;margin-top:4px;">0 AMZN</div>
+              <div id="elPotShareUsdVal" style="font-size:0.8rem;color:var(--muted);margin-top:2px;">$0.00 USD</div>
+            </div>
+            <div style="background:var(--paper);border:1px solid var(--line);padding:14px 16px;border-radius:12px;">
+              <div style="font-size:0.78rem;color:var(--muted);font-weight:700;">Lifetime Fees Entitlement</div>
+              <div id="elLifetimeShareVal" style="font-size:1.35rem;font-weight:800;color:var(--ink);margin-top:4px;">0 AMZN</div>
+              <div id="elLifetimeShareUsdVal" style="font-size:0.8rem;color:var(--muted);margin-top:2px;">$0.00 USD</div>
+            </div>
+          </div>
+
+          <p id="elMessage" style="margin:16px 0 0 0;font-size:0.92rem;line-height:1.5;color:var(--ink);"></p>
+        </div>
+      </div>
+
+      <!-- TRANSACTION DISTRIBUTION HISTORY -->
+      <div class="history-container" id="distributionHistorySection">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="margin:0 0 6px 0;font-size:1.35rem;font-weight:800;">Holder Fee Sharing Distribution History</h3>
+            <p class="muted" style="margin:0;font-size:0.92rem;">
+              On-chain log of all fee sweep distributions and pot inflows executed on Robinhood Chain Mainnet.
+            </p>
+          </div>
+          <div style="font-size:0.82rem;color:var(--muted);font-weight:700;">
+            <span id="historyTotalCount">0</span> on-chain events recorded
+          </div>
+        </div>
+
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="filterHistory('ALL', this)" id="tabAll">All Activity (<span id="countAll">0</span>)</button>
+          <button class="tab-btn" onclick="filterHistory('SWEEP', this)" id="tabSweeps">Fee Sweeps (<span id="countSweeps">0</span>)</button>
+          <button class="tab-btn" onclick="filterHistory('HARVEST', this)" id="tabHarvests">Pot Inflows (<span id="countHarvests">0</span>)</button>
+        </div>
+
+        <div class="tx-table-wrap">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th>Event Type</th>
+                <th>Amount (AMZN)</th>
+                <th>Estimated USD</th>
+                <th>Block</th>
+                <th>Transaction Hash</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="txTableBody">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:24px;color:var(--muted);">Loading on-chain transaction history...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
 </main>
 
 <footer>
