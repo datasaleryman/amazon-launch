@@ -2903,7 +2903,7 @@
   let allTxHistory = [];
   let currentHistoryFilter = 'ALL';
 
-  async function loadRealtimeData(manual = false) {
+  async function loadRealtimeData(manual) {
     const refreshBtn = document.getElementById('refreshRtBtn');
     if (manual && refreshBtn) {
       refreshBtn.disabled = true;
@@ -2944,20 +2944,16 @@
     }
   }
 
+  function formatUsd(num) {
+    return '$' + Number(num || 0).toLocaleString('en-US');
+  }
+
   function updateMarketcapElements(data) {
     if (!data) return;
-    const mcapFormatted = data.marketCapFormatted || ('
-</html>
- + Number(data.marketCap || 0).toLocaleString('en-US'));
-    const priceFormatted = data.priceUsd ? ('
-</html>
- + Number(data.priceUsd).toFixed(8)) : '$0.00001776';
-    const shortPrice = data.priceUsd ? ('
-</html>
- + Number(data.priceUsd).toFixed(7)) : '$0.0000178';
-    const liquidityFormatted = data.liquidityUsd ? ('
-</html>
- + Number(data.liquidityUsd).toLocaleString('en-US')) : '$14,557';
+    const mcapFormatted = data.marketCapFormatted || formatUsd(data.marketCap);
+    const priceFormatted = data.priceUsd ? ('$' + Number(data.priceUsd).toFixed(8)) : '$0.00001776';
+    const shortPrice = data.priceUsd ? ('$' + Number(data.priceUsd).toFixed(7)) : '$0.0000178';
+    const liquidityFormatted = data.liquidityUsd ? formatUsd(data.liquidityUsd) : '$14,557';
     const nativePriceFormatted = data.priceNative ? (data.priceNative + ' AMZN') : '0.0000000699 AMZN';
 
     // Top ticker bar
@@ -2991,9 +2987,7 @@
     const rtPrice = document.getElementById('rtPrice');
     if (rtPrice) rtPrice.textContent = priceFormatted;
     const rtPriceNative = document.getElementById('rtPriceNative');
-    if (rtPriceNative) rtPriceNative.textContent = nativePriceFormatted + ' (AMZN: 
-</html>
- + (data.amznPriceUsd ? data.amznPriceUsd.toFixed(2) : '254.23') + ')';
+    if (rtPriceNative) rtPriceNative.textContent = nativePriceFormatted + ' (AMZN: $' + (data.amznPriceUsd ? data.amznPriceUsd.toFixed(2) : '254.23') + ')';
 
     const rtReservesAmzn = document.getElementById('rtReservesAmzn');
     if (rtReservesAmzn) rtReservesAmzn.textContent = Number(data.reserveAmzn || 0).toFixed(2) + ' AMZN';
@@ -3055,20 +3049,18 @@
       const isSweep = tx.type === 'SWEEP';
       const badgeClass = isSweep ? 'tx-badge-sweep' : 'tx-badge-harvest';
       const badgeLabel = isSweep ? 'Fee Sweep' : 'Pot Inflow';
-      const shortHash = tx.hash.slice(0, 8) + '...' + tx.hash.slice(-6);
+      const txHashStr = String((tx && (tx.txHash || tx.hash)) || ''); const shortHash = txHashStr && txHashStr.length > 14 ? (txHashStr.slice(0, 8) + '...' + txHashStr.slice(-6)) : (txHashStr || 'View Tx');
 
       return (
         '<tr>' +
           '<td><span class="' + badgeClass + '">' + badgeLabel + '</span></td>' +
           '<td style="font-weight:700;color:var(--ink);">' + Number(tx.amountAmzn).toFixed(6) + ' AMZN</td>' +
-          '<td style="color:#059669;font-weight:600;">
-</html>
- + Number(tx.amountUsd || 0).toFixed(2) + '</td>' +
+          '<td style="color:#059669;font-weight:600;">$' + Number(tx.amountUsd || 0).toFixed(2) + '</td>' +
           '<td style="font-family:ui-monospace,monospace;font-size:0.8rem;color:var(--muted);">#' + tx.blockNumber + '</td>' +
           '<td>' +
             '<div class="tx-hash-box">' +
-              '<span title="' + tx.hash + '">' + shortHash + '</span>' +
-              '<button onclick="navigator.clipboard.writeText('' + tx.hash + '');this.textContent='✓';setTimeout(()=>this.textContent='Copy',1500);" style="padding:2px 6px;border-radius:4px;border:1px solid var(--line);background:var(--paper);font-size:0.7rem;cursor:pointer;">Copy</button>' +
+              '<span title="' + txHashStr + '">' + shortHash + '</span>' +
+              '<button onclick="navigator.clipboard.writeText(\'' + txHashStr + '\');this.textContent=\'✓\';setTimeout(()=>this.textContent=\'Copy\',1500);" style="padding:2px 6px;border-radius:4px;border:1px solid var(--line);background:var(--paper);font-size:0.7rem;cursor:pointer;">Copy</button>' +
             '</div>' +
           '</td>' +
           '<td>' +
@@ -3132,13 +3124,9 @@
       if (balanceVal) balanceVal.textContent = (data.balanceFormatted || '0') + ' $AI';
       if (shareVal) shareVal.textContent = (data.shareOfSupply * 100).toFixed(4) + '% of circulating supply';
       if (potShareVal) potShareVal.textContent = (data.estimatedPotShareAmzn ? data.estimatedPotShareAmzn.toFixed(6) : '0.000000') + ' AMZN';
-      if (potShareUsdVal) potShareUsdVal.textContent = '
-</html>
- + (data.estimatedPotShareUsd ? data.estimatedPotShareUsd.toFixed(2) : '0.00') + ' USD';
+      if (potShareUsdVal) potShareUsdVal.textContent = '$' + (data.estimatedPotShareUsd ? data.estimatedPotShareUsd.toFixed(2) : '0.00') + ' USD';
       if (lifetimeShareVal) lifetimeShareVal.textContent = (data.estimatedLifetimeShareAmzn ? data.estimatedLifetimeShareAmzn.toFixed(6) : '0.000000') + ' AMZN';
-      if (lifetimeShareUsdVal) lifetimeShareUsdVal.textContent = '
-</html>
- + (data.estimatedLifetimeShareUsd ? data.estimatedLifetimeShareUsd.toFixed(2) : '0.00') + ' USD';
+      if (lifetimeShareUsdVal) lifetimeShareUsdVal.textContent = '$' + (data.estimatedLifetimeShareUsd ? data.estimatedLifetimeShareUsd.toFixed(2) : '0.00') + ' USD';
       if (messageEl) messageEl.textContent = data.explanation || '';
 
     } catch (err) {
@@ -3165,6 +3153,5 @@
   setInterval(() => loadRealtimeData(false), 15000);
 })();
 </script>
-
 </body>
 </html>

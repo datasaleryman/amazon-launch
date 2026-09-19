@@ -217,6 +217,7 @@ app.get('/api/token/creator-fees', async (req, res) => {
             amountAmzn: feeAmt,
             amountUsd: feeAmt * amznPriceUsd,
             blockNumber: parseInt(log.blockNumber, 16),
+            hash: log.transactionHash,
             txHash: log.transactionHash,
             explorerUrl: `https://robinhoodchain.blockscout.com/tx/${log.transactionHash}`
           });
@@ -233,6 +234,7 @@ app.get('/api/token/creator-fees', async (req, res) => {
       amountAmzn: 0.17784894521914305,
       amountUsd: 0.17784894521914305 * amznPriceUsd,
       blockNumber: 67177367,
+      hash: '0x7c0218f5cd0d7666fd3d584688d55b2076d871b4ba11e1d7152f535002f393d9',
       txHash: '0x7c0218f5cd0d7666fd3d584688d55b2076d871b4ba11e1d7152f535002f393d9',
       explorerUrl: 'https://robinhoodchain.blockscout.com/tx/0x7c0218f5cd0d7666fd3d584688d55b2076d871b4ba11e1d7152f535002f393d9'
     });
@@ -342,16 +344,24 @@ app.get('/api/token/eligibility', async (req, res) => {
       balance: balanceTokens,
       balanceFormatted: balanceTokens.toLocaleString('en-US', { maximumFractionDigits: 2 }),
       supplySharePercent: parseFloat(supplySharePercent.toFixed(6)),
+      shareOfSupply: supplySharePercent / 100,
       estimatedPotShareAmzn: parseFloat(estimatedPotShareAmzn.toFixed(6)),
       estimatedPotShareUsd: parseFloat(estimatedPotShareUsd.toFixed(2)),
       estimatedLifetimeFeeShareAmzn: parseFloat(estimatedLifetimeFeeShareAmzn.toFixed(6)),
+      estimatedLifetimeShareAmzn: parseFloat(estimatedLifetimeFeeShareAmzn.toFixed(6)),
       estimatedLifetimeFeeShareUsd: parseFloat(estimatedLifetimeFeeShareUsd.toFixed(2)),
+      estimatedLifetimeShareUsd: parseFloat(estimatedLifetimeFeeShareUsd.toFixed(2)),
       totalEarnedAmzn,
       inPotAmzn,
       holderFeeSharingStatus: isExcluded
         ? 'Excluded (Liquidity/Protocol Address)'
         : (isEligible ? 'Active & Fully Eligible' : 'Eligible once $AI tokens are acquired'),
       claimInstructions: 'Creator fees route to AI holders through the fee distributor. There is no creator claim. Each holder claims their share from their profile menu.',
+      explanation: isExcluded
+        ? `Address is excluded from fee sharing distributions.`
+        : (isEligible
+            ? `Eligible holder! You hold ${balanceTokens.toLocaleString('en-US', { maximumFractionDigits: 2 })} $AI (${supplySharePercent.toFixed(4)}% of supply). Your pro-rata share of the current distribution pot is ~${estimatedPotShareAmzn.toFixed(6)} AMZN ($${estimatedPotShareUsd.toFixed(2)} USD), and lifetime earned share is ~${estimatedLifetimeFeeShareAmzn.toFixed(6)} AMZN.`
+            : `Address holds 0 $AI. Acquire $AI on Robinhood Chain to start receiving pro-rata creator fee distributions.`),
       message: isExcluded
         ? `Address is excluded from fee sharing distributions.`
         : (isEligible
