@@ -482,6 +482,71 @@
     box-shadow:0 8px 22px rgba(29,161,242,.22);
   }
 
+
+  section[id] {
+    scroll-margin-top: 115px;
+  }
+  .navlinks a {
+    position: relative;
+    transition: color .2s ease;
+    cursor: pointer;
+  }
+  .navlinks a:hover,
+  .navlinks a.active {
+    color: var(--accent-dark);
+    font-weight: 800;
+  }
+  .navlinks a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2.5px;
+    background: var(--accent);
+    border-radius: 999px;
+  }
+  .mobile-nav-bar {
+    display: none;
+  }
+  @media (max-width: 860px) {
+    section[id] {
+      scroll-margin-top: 140px;
+    }
+    .mobile-nav-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 4px 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .mobile-nav-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .m-navlink {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 7px 15px;
+      border-radius: 999px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      transition: all .2s ease;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .m-navlink:hover,
+    .m-navlink.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1775,16 +1840,120 @@
 
 
 <script>
-(function(){
-  document.querySelectorAll('a').forEach(function(a){
-    a.setAttribute('role','button');
-    a.setAttribute('aria-disabled','false');
-    a.addEventListener('click', function(e){
-      e.preventDefault();
+(function() {
+  function getHeaderOffset() {
+    const header = document.querySelector('header');
+    return header ? header.offsetHeight + 18 : 110;
+  }
+
+  function scrollToTarget(target) {
+    if (!target) return;
+    const headerOffset = getHeaderOffset();
+    const elementPosition = target.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    window.scrollTo({
+      top: Math.max(0, offsetPosition),
+      behavior: 'smooth'
     });
+  }
+
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const navLinks = Array.from(document.querySelectorAll('.navlinks a, .mobile-nav-bar a'));
+
+  function updateActiveNav(activeId) {
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === activeId) {
+        link.classList.add('active');
+        if (link.classList.contains('m-navlink')) {
+          link.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+        }
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  // Intercept in-page anchor clicks for smooth scrolling with offset
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    // Allow external or protocol links to open normally
+    if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//') || href.startsWith('mailto:')) {
+      return;
+    }
+
+    // Scroll to top for logo
+    if (href === '#' || href === '#top') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        history.pushState(null, null, window.location.pathname);
+      }
+      updateActiveNav('');
+      return;
+    }
+
+    // Target section navigation
+    if (href.startsWith('#') && href.length > 1) {
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        scrollToTarget(target);
+        history.pushState(null, null, href);
+        updateActiveNav(href);
+      }
+    }
   });
+
+  // Track scroll position to keep navigation link highlighting accurate
+  let scrollTimeout;
+  function onScroll() {
+    const scrollPos = window.pageYOffset + getHeaderOffset() + 60;
+    let currentId = '';
+
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const sec = sections[i];
+      if (scrollPos >= sec.offsetTop) {
+        currentId = '#' + sec.id;
+        break;
+      }
+    }
+
+    if (currentId) {
+      updateActiveNav(currentId);
+    } else if (window.pageYOffset < 200) {
+      updateActiveNav('');
+    }
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!scrollTimeout) {
+      scrollTimeout = requestAnimationFrame(function() {
+        onScroll();
+        scrollTimeout = null;
+      });
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll to hash on page load if user arrives with direct anchor
+  if (window.location.hash) {
+    setTimeout(function() {
+      const initialTarget = document.querySelector(window.location.hash);
+      if (initialTarget) {
+        scrollToTarget(initialTarget);
+        updateActiveNav(window.location.hash);
+      }
+    }, 180);
+  }
 })();
 </script>
-
 </body>
 </html>
